@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#020302">
+  <meta name="description" content="TiTaN">
+  <title>TiTaN</title>
+  <style>
+    :root{color-scheme:dark;background:#020302}
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{width:100%;height:100%;min-width:0;min-height:100%;margin:0;overflow:hidden;background:#020302}
+    body{position:fixed;inset:0;overscroll-behavior:none}
+    canvas{position:absolute;inset:0;display:block;width:100%;height:100%;background:#020302}
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas" aria-label="Matrix-style streams of random characters" role="img"></canvas>
+  <script>
+    (()=>{
+      'use strict';
+      const canvas=document.getElementById('matrixCanvas');
+      const ctx=canvas.getContext('2d',{alpha:false});
+      const glyphs='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz#$%&()*+,-./:;<=>?@[]^_{|}~';
+      const palette=['#2c382b','#344232','#3d4b39','#52634a','#637453','#83a866'];
+      let cells=[];
+      let width=0,height=0,fontSize=6,cellWidth=3.6,lineHeight=8.5,dpr=1;
+      const pickColor=()=>{
+        const r=Math.random();
+        return r<.025?palette[5]:r<.13?palette[4]:r<.42?palette[2]:palette[0];
+      };
+      const pickGlyph=()=>Math.random()<.055?' ':glyphs[(Math.random()*glyphs.length)|0];
+      function paintCell(cell){
+        ctx.fillStyle='#020302';
+        ctx.fillRect(cell.x-.3,cell.y-.25,cellWidth+.7,lineHeight+.5);
+        ctx.fillStyle=cell.color;
+        ctx.fillText(cell.char,cell.x,cell.y);
+      }
+      function resize(){
+        const vv=window.visualViewport;
+        width=Math.max(1,Math.ceil(vv?.width||window.innerWidth));
+        height=Math.max(1,Math.ceil(vv?.height||window.innerHeight));
+        dpr=Math.min(2,Math.max(1,window.devicePixelRatio||1));
+        canvas.width=Math.round(width*dpr);
+        canvas.height=Math.round(height*dpr);
+        canvas.style.width=width+'px';
+        canvas.style.height=height+'px';
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+        ctx.fillStyle='#020302';
+        ctx.fillRect(0,0,width,height);
+        fontSize=Math.max(5.2,Math.min(8,width*.016));
+        ctx.font=`${fontSize}px "Courier New",monospace`;
+        ctx.textBaseline='top';
+        cellWidth=Math.max(3,ctx.measureText('M').width);
+        lineHeight=fontSize*1.47;
+        const columns=Math.ceil(width/cellWidth)+2;
+        const rows=Math.ceil(height/lineHeight)+1;
+        cells=[];
+        for(let row=0;row<rows;row++){
+          const y=row*lineHeight;
+          const offset=Math.random()*cellWidth*.35;
+          for(let col=0;col<columns;col++){
+            const cell={x:col*cellWidth-offset,y,char:pickGlyph(),color:pickColor()};
+            cells.push(cell);
+            ctx.fillStyle=cell.color;
+            ctx.fillText(cell.char,cell.x,cell.y);
+          }
+        }
+      }
+      function flicker(){
+        if(document.hidden||!cells.length)return;
+        const count=Math.max(8,Math.floor(cells.length*.0015));
+        for(let i=0;i<count;i++){
+          const cell=cells[(Math.random()*cells.length)|0];
+          cell.char=pickGlyph();
+          cell.color=pickColor();
+          paintCell(cell);
+        }
+      }
+      resize();
+      window.addEventListener('resize',resize,{passive:true});
+      window.visualViewport?.addEventListener('resize',resize,{passive:true});
+      let timer=0;
+      if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        timer=window.setInterval(flicker,180);
+      }
+      document.addEventListener('visibilitychange',()=>{
+        if(document.hidden&&timer){window.clearInterval(timer);timer=0;}
+        else if(!document.hidden&&!timer&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+          timer=window.setInterval(flicker,180);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

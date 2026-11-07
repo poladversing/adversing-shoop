@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">TiTaN cube</title>
+  <defs>
+    <radialGradient id="back" cx="50%" cy="42%" r="66%">
+      <stop offset="0" stop-color="#1a1740"/>
+      <stop offset="1" stop-color="#080c1c"/>
+    </radialGradient>
+    <linearGradient id="top" x1="10" y1="10" x2="50" y2="34" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d5c6ff"/>
+      <stop offset=".48" stop-color="#9e83ff"/>
+      <stop offset="1" stop-color="#6246c7"/>
+    </linearGradient>
+    <linearGradient id="left" x1="11" y1="20" x2="35" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8c72ff"/>
+      <stop offset="1" stop-color="#39258c"/>
+    </linearGradient>
+    <linearGradient id="right" x1="52" y1="18" x2="31" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6650c5"/>
+      <stop offset="1" stop-color="#211b59"/>
+    </linearGradient>
+    <filter id="glow" x="-45%" y="-45%" width="190%" height="190%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 .46 0 0 0 0 .31 0 0 0 0 .98 0 0 0 .7 0" result="tint"/>
+      <feMerge><feMergeNode in="tint"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <circle cx="32" cy="32" r="30.5" fill="url(#back)" stroke="#51409e" stroke-width="1.2"/>
+  <g stroke-linejoin="round" stroke-linecap="round" filter="url(#glow)">
+    <path d="M32 5.5 58 20.5 32 35.5 6 20.5Z" fill="url(#top)" stroke="#cdbfff" stroke-width="1.35"/>
+    <path d="M6 20.5 32 35.5v23L6 43.5Z" fill="url(#left)" stroke="#a892ff" stroke-width="1.35"/>
+    <path d="M58 20.5 32 35.5v23l26-15Z" fill="url(#right)" stroke="#7963df" stroke-width="1.35"/>
+    <path d="M32 35.5v23" fill="none" stroke="#d9ceff" stroke-opacity=".72" stroke-width="1.05"/>
+    <path d="m13 20.5 19 11 19-11" fill="none" stroke="#e3d9ff" stroke-opacity=".54" stroke-width=".8"/>
+  </g>
+</svg>
